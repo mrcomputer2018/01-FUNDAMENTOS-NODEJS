@@ -1,23 +1,13 @@
 import http from 'node:http';
+import json from './middlewares/json.js';
 
 const users = []
 
 const server = http.createServer( async(req, res) => {
     const { url, method } = req;
 
-    const buffer = [];
-
-    //carrega toda a minha stream dentro do array dee buffer
-    for await (const chunk of req) {
-        buffer.push(chunk);
-    }
-
-    try {
-        req.body = JSON.parse(Buffer.concat(buffer).toString());
-        console.log(body);
-    } catch (error) {
-        req.body = null;
-    }
+    // executando o middleware json
+    await json(req, res);
 
     if (url === '/users' && method === 'GET') {
     return res
